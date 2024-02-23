@@ -29,7 +29,7 @@ yarn start
 |-------------------|----------|--------------------------------------------------|---|---|
 | user@example.com  | 1234     | Create/Read/Update/Delete/Participate/Join Event |   |   |
 | admin@example.com | 1234     | Hat alle Admin Rechte                            |   |   |
-|                   |          |                                                  |   |   |
+
 ### Troubleshooting
 
 ```

@@ -21,14 +21,17 @@ docker run --name postgres_db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=pos
 ### Schritt 3
 Öffnen Sie ihr geclontes Frontend Projekt und öffnen ein Terminal und geben sie Folgendes ein:
 ```
+yarn install
+```
+```
 yarn start
 ```
 
 ### Schritt 4
-| E-Mail            | Password | Authorities                                      |   |   |
-|-------------------|----------|--------------------------------------------------|---|---|
-| user@example.com  | 1234     | Create/Read/Update/Delete/Participate/Join Event |   |   |
-| admin@example.com | 1234     | Hat alle Admin Rechte                            |   |   |
+| E-Mail            | Password | Authorities                                      |  
+|-------------------|----------|--------------------------------------------------|
+| user@example.com  | 1234     | Create/Read/Update/Delete/Participate/Join Event | 
+| admin@example.com | 1234     | Hat alle Admin Rechte                            |   
 
 ### Troubleshooting
 

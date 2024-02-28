@@ -31,8 +31,17 @@ const UserTable = () => {
 
   return (
     <>
+    <Button
+                variant='contained'
+                color='primary'
+                onClick={() => {
+                    navigate('/main');
+                }}>
+                Home
+            </Button>
       {users.map((user) => (
         <div key={user.id}>
+          
           <Card sx={{ minWidth: 275 }}>
             <CardContent>
               {user.firstName} {user.lastName} {user.email}

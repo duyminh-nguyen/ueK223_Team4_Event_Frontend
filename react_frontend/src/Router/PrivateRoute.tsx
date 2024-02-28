@@ -3,12 +3,13 @@ import { Navigate } from 'react-router-dom';
 import * as jwt from 'jsonwebtoken';
 import ActiveUserContext from '../Contexts/ActiveUserContext';
 import AuthorityService from '../Services/AuthorityService';
+import { Authority } from '../types/models/Authority.model';
 import { Button } from '@mui/material';
-import authorities from '../config/Authorities';
+import Authorities from '../config/Authorities';
 
 interface Props {
   element: React.ReactElement;
-  requiredAuths: authorities[];
+  authorities: Authority[];
 }
 
 type JWTType = {
@@ -17,9 +18,9 @@ type JWTType = {
 };
 
 const PrivateRoute: React.FC<Props> = ({
-  requiredAuths: requiredAuths,
-  element: RouteComponent,
-}) => {
+                                         element: RouteComponent,
+                                         authorities,
+                                       }) => {
   const activeUserContext = useContext(ActiveUserContext);
   /**
    * isLoggedIn checks if the token, which is saved inside the localStorage,
@@ -48,13 +49,13 @@ const PrivateRoute: React.FC<Props> = ({
     activeUserContext.logout();
     return <Navigate to='/login' replace={true} />;
   }
+
   /**
    * Check if the active user has at least 1 of the needed authorities.
    * If no authorities are needed true is returned.
    */
-  let hasNeededAuthorities =
-    requiredAuths.length === 0 ||
-    requiredAuths.some(AuthorityService.hasAuthority);
+  const hasNeededAuthorities =
+      authorities.length === 0 || authorities.some(AuthorityService.hasAuthority);
 
   /**
    * If the user doesn't possess the needed authorities Redirect the user to
@@ -66,11 +67,11 @@ const PrivateRoute: React.FC<Props> = ({
 
   // All checks passed
   return (
-    //Pagelayout puts the Navigation, Menu etc. around the component
-    <div>
-      <Button onClick={activeUserContext.logout}>Logout</Button>
-      {RouteComponent}
-    </div>
+      //Pagelayout puts the Navigation, Menu etc. around the component
+      <div>
+        <Button onClick={activeUserContext.logout}>Logout</Button>
+        {RouteComponent}
+      </div>
   );
 };
 export default PrivateRoute;

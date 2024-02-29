@@ -23,9 +23,12 @@ export default function EventPage() {
     const handleAdd = () => {
         navigate('/event/add');
     };
-
     const handleEdit = (id: string) => {
         navigate('/event/edit/' + id);
+    };
+
+    const handleDetail = (id: string) => {
+        navigate('/event/guests/' + id);
     };
 
     const [events, setEvents] = useState<Event[]>([]);
@@ -44,22 +47,19 @@ export default function EventPage() {
     };
 
     const loadUsersForEvents = async () => {
-        const eventsWithUsers: Event[] = [];
-
-        for (const event of events) {
-            if (event.owner) {
-                try {
-                    const user = await UserService.getUser(event.owner.id);
-                    event.owner = user;
-                } catch (error) {
-                    console.error('Error loading user data: ', error);
-                }
+        const eventsWithGuests: Event[] = [];
+    
+        try {
+            for (const event of events) {
+                const guests = await EventService.getEventGuests(event.id, { page: 0, size: 10 }); // Adjust page and size as needed
+                event.guests = guests;
+                eventsWithGuests.push(event);
             }
-
-            eventsWithUsers.push(event);
+    
+            setEvents(eventsWithGuests);
+        } catch (error) {
+            console.error('Error loading guests for events: ', error);
         }
-
-        setEvents(eventsWithUsers);
     };
 
     useEffect(() => {
@@ -113,7 +113,7 @@ export default function EventPage() {
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <IconButton
                                         aria-expanded={expanded === event.id}
-                                        onClick={() => handleExpandClick(event.id)}
+                                        onClick={() => handleDetail(event.id)}
                                         aria-label='show more'>
                                         <GroupIcon />
                                     </IconButton>
@@ -136,19 +136,6 @@ export default function EventPage() {
                                 <Box sx={{ bgcolor: 'background.paper', mt: 2, p: 2 }}>
                                     <Typography variant="body2">{event.description}</Typography>
                                 </Box>
-                                <Collapse in={expanded === event.id} timeout="auto" unmountOnExit>
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        Guests
-                                    </Typography>
-                                    <ul>
-                                        {event.guests &&
-                                            event.guests.map((guest, guestIndex) => (
-                                                <li key={guestIndex}>
-                                                    {guest.firstName} {guest.lastName}
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </Collapse>
                             </Paper>
                         </Grid>
                     ))}

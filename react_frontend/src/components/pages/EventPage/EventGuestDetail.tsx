@@ -1,34 +1,48 @@
-import api from "../../../config/Api";
+import React, { useState, useEffect } from 'react';
+import Typography from '@mui/material/Typography';
+import { useParams } from 'react-router-dom';
+import EventService from '../../../Services/EventService';
 import { Event } from '../../../types/models/Event.model';
+import { User } from '../../../types/models/User.model';
 
-const EventService = {
-    // Existing methods...
+const EventGuestDetail = () => {
+    const { eventId } = useParams<{ eventId: string }>();
+    const [event, setEvent] = useState<Event | null>(null);
 
-    getEventById: async (eventId: string): Promise<Event> => {
-        try {
-            const response = await api.get(`/event/${eventId}`);
-            const eventData: Event = response.data;
-
-            // Ensure that eventData contains the guest data
-            if (eventData.guests) {
-                // If guest data is present, fetch the details for each guest
-                const guestsWithDetails = await Promise.all(
-                    eventData.guests.map(async (guestId: string) => {
-                        const guestResponse = await api.get(`/user/${guestId}`);
-                        return guestResponse.data;
-                    })
-                );
-
-                // Replace the guest IDs with actual guest objects
-                eventData.guests = guestsWithDetails;
+    useEffect(() => {
+        const fetchEventAndGuests = async () => {
+            try {
+                const eventData = await EventService.getEventById(eventId);
+                setEvent(eventData);
+            } catch (error) {
+                console.error('Error fetching event: ', error);
             }
+        };
+        fetchEventAndGuests();
+    }, [eventId]);
 
-            return eventData;
-        } catch (error) {
-            console.error("Error", error);
-            throw error;
-        }
-    },
+    return (
+        <div>
+            {event && (
+                <div>
+                    <Typography variant="h5" gutterBottom>
+                        Event Name: {event.name}
+                    </Typography>
+                    <Typography variant="h6" gutterBottom>
+                        Guests
+                    </Typography>
+                    <ul>
+                        {event.guests &&
+                            event.guests.map((guest: User, index: number) => (
+                                <li key={index}>
+                                    {guest.firstName} {guest.lastName} - {guest.email}
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
 };
 
-export default EventService;
+export default EventGuestDetail;

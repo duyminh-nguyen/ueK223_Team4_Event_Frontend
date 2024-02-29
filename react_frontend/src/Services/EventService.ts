@@ -63,7 +63,6 @@ const EventService = {
         }
     },
 
-
     getEventGuestsEndpoint: (eventId: string) => {
         return `/event/${eventId}/guests`;
     },

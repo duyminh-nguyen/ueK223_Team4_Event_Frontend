@@ -46,6 +46,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
 
   const [users, setUsers] = useState<User[]>([]);
   const [eventGuests, setEventGuests] = useState<User[]>([]);
+  const [guests, setGuests] = useState<User[]>([]); // Define guests state variable
 
   useEffect(() => {
     UserService.getAllUsers().then((data: any) => {
@@ -64,7 +65,9 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
   }, [event.id]);
 
   const handleUserChange = (event: React.SyntheticEvent, newValue: User[] | null) => {
-    formik.setFieldValue('guests', newValue || []);
+    if (newValue) {
+      setGuests(newValue);
+    }
   };
 
   return (
@@ -125,20 +128,13 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
             <div style={{ color: "red" }}>{formik.errors.description}</div>
           ) : null}
            <Autocomplete
-            multiple
-            id="tags-standard"
-            options={users}
-            getOptionLabel={(option) => option.email}
-            onChange={handleUserChange}
-            value={formik.values.guests}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                label="Users"
-              />
-            )}
-          />
+          multiple
+          options={users}
+          getOptionLabel={(option) => option.email}
+          onChange={handleUserChange}
+          value={guests}
+          renderInput={(params) => <TextField {...params} variant="standard" label="Users" />}
+        />
         </Box>
         <div>
           <Button

@@ -4,10 +4,14 @@ import { useParams } from 'react-router-dom';
 import EventService from '../../../Services/EventService';
 import { Event } from '../../../types/models/Event.model';
 import { User } from '../../../types/models/User.model';
+import Pagination from '@mui/material/Pagination';
 
 const EventGuestDetail = () => {
     const { eventId } = useParams<{ eventId?: string }>();
     const [event, setEvent] = useState<Event | null>(null);
+    const [guests, setGuests] = useState<User[]>([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         const fetchEventAndGuests = async () => {
@@ -23,6 +27,25 @@ const EventGuestDetail = () => {
         fetchEventAndGuests();
     }, [eventId]);
 
+    useEffect(() => {
+        const fetchGuests = async () => {
+            try {
+                if (eventId) { 
+                    const response = await EventService.getEventGuests(eventId, { page: page - 1, size: 10 });
+                    setGuests(response);
+                    setTotalPages(1);
+                }
+            } catch (error) {
+                console.error('Error fetching guests: ', error);
+            }
+        };
+        fetchGuests();
+    }, [eventId, page]);
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPage(value);
+    };
+
     return (
         <div>
             {event && (
@@ -34,13 +57,19 @@ const EventGuestDetail = () => {
                         Guests
                     </Typography>
                     <ul>
-                        {event.guests &&
-                            event.guests.map((guest: User, index: number) => (
-                                <li key={index}>
-                                    {guest.firstName} {guest.lastName} - {guest.email}
-                                </li>
-                            ))}
+                        {guests.map((guest: User, index: number) => (
+                            <li key={index}>
+                                {guest.firstName} {guest.lastName} - {guest.email}
+                            </li>
+                        ))}
                     </ul>
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handlePageChange}
+                        variant="outlined"
+                        shape="rounded"
+                    />
                 </div>
             )}
         </div>

@@ -10,10 +10,8 @@ import { User } from '../../../types/models/User.model';
 import ActiveUserContext from '../../../Contexts/ActiveUserContext';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
-import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import GroupIcon from '@mui/icons-material/Group';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default function EventPage() {
     const navigate = useNavigate();
@@ -22,16 +20,15 @@ export default function EventPage() {
     const handleAdd = () => {
         navigate('/event/add');
     };
-    const handleEdit = (id: string) => {
-        navigate('/event/edit/' + id);
-    };
 
     const handleDetail = (id: string) => {
         navigate('/event/guests/' + id);
     };
 
     const [events, setEvents] = useState<Event[]>([]);
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    
     useEffect(() => {
         loadEvents();
     }, []);
@@ -43,29 +40,6 @@ export default function EventPage() {
         } catch (error) {
             console.error('Error fetching events: ', error);
         }
-    };
-
-    function userCanEditEvent(event: Event, user: User) {
-        if (event.owner) {
-            return user.id === event.owner.id;
-        }
-        return false;
-    }
-
-    const deleteEvent = async (id: string) => {
-        try {
-            await EventService.deleteEventById(id);
-            loadEvents();
-            console.log('Event successfully deleted');
-        } catch (error) {
-            console.error('Error deleting event: ', error);
-        }
-    };
-
-    const [expanded, setExpanded] = useState<string | false>(false);
-
-    const handleExpandClick = (eventID: string) => {
-        setExpanded(expanded === eventID ? false : eventID);
     };
 
     return (
@@ -82,6 +56,11 @@ export default function EventPage() {
                 Add
             </Button>{' '}
             <h1>All Events</h1>
+
+            {loading && <p>Loading events...</p>}
+            {error && <p>{error}</p>}
+            {events.length === 0 && !loading && <p>No Events Found.</p>}
+
             <Box>
                 <Grid container spacing={3}>
                     {events.map((event, index) => (
@@ -89,24 +68,23 @@ export default function EventPage() {
                             <Paper elevation={5} sx={{ padding: 2 }}>
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <IconButton
-                                        aria-expanded={expanded === event.id}
                                         onClick={() => handleDetail(event.id)}
                                         aria-label='show more'>
                                         <GroupIcon />
                                     </IconButton>
-                                    <Typography variant="body2" align="right" sx={{ opacity: 0.6 as number }}>
+                                    <Typography variant="body2" align="right" sx={{ opacity: 0.6 }}>
                                         Owner: {event.owner.firstName} {event.owner.lastName}
                                     </Typography>
                                 </Grid>
-                                <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 as number }}>
+                                <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 }}>
                                     {new Date(event.date).toLocaleDateString()}
                                 </Typography>
                                 <Typography variant="h5" component="div">
                                     {event.name}
                                 </Typography> 
                                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px' }}>
-                                    <LocationOnIcon sx={{ opacity: 0.6 as number, marginRight: '4px' }} />
-                                    <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 as number }}>
+                                    <LocationOnIcon sx={{ opacity: 0.6, marginRight: '4px' }} />
+                                    <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 }}>
                                         {event.location}
                                     </Typography>
                                 </div>

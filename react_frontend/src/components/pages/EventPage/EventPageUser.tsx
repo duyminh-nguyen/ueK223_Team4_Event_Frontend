@@ -67,12 +67,6 @@ export default function EventPage() {
         }
     };
 
-    const [expanded, setExpanded] = useState<string | false>(false);
-
-    const handleExpandClick = (eventID: string) => {
-        setExpanded(expanded === eventID ? false : eventID);
-    };
-
     return (
         <div>
             <Button
@@ -87,7 +81,7 @@ export default function EventPage() {
                 Add
             </Button>{' '}
 
-            <h1>All Events</h1>
+            <h1>My Events</h1>
 
             {loading && <p>Loading events...</p>}
             {error && <p>{error}</p>}
@@ -100,8 +94,7 @@ export default function EventPage() {
                             <Paper elevation={5} sx={{ padding: 2 }}>
                                 <Grid container alignItems="center" justifyContent="space-between">
                                     <IconButton
-                                        aria-expanded={expanded === event.id}
-                                        onClick={() => handleExpandClick(event.id)}
+                                        onClick={() => handleDetail(event.id)}
                                         aria-label='show more'>
                                         <GroupIcon />
                                     </IconButton>
@@ -124,19 +117,6 @@ export default function EventPage() {
                                 <Box sx={{ bgcolor: 'background.paper', mt: 2, p: 2 }}>
                                     <Typography variant="body2">{event.description}</Typography>
                                 </Box>
-                                <Collapse in={expanded === event.id} timeout="auto" unmountOnExit>
-                                    <Typography variant="h6" gutterBottom component="div">
-                                        Guests
-                                    </Typography>
-                                    <ul>
-                                        {event.guests &&
-                                            event.guests.map((guest, guestIndex) => (
-                                                <li key={guestIndex}>
-                                                    {guest.firstName} {guest.lastName}
-                                                </li>
-                                            ))}
-                                    </ul>
-                                </Collapse>
                                 {userCanEditEvent(event) && (
                                     <Button onClick={() => handleEdit(event.id)} size="small">
                                         Edit Event

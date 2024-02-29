@@ -73,7 +73,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
-        <h1>Create Event</h1>
+        <h1>Add Event</h1>
         <Box sx={{ paddingTop: "15px" }}>
           <TextField
             id="name"

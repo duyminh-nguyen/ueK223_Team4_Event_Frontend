@@ -18,9 +18,9 @@ type JWTType = {
 };
 
 const PrivateRoute: React.FC<Props> = ({
-                                         element: RouteComponent,
-                                         authorities,
-                                       }) => {
+  element: RouteComponent,
+  authorities,
+}) => {
   const activeUserContext = useContext(ActiveUserContext);
   /**
    * isLoggedIn checks if the token, which is saved inside the localStorage,
@@ -56,7 +56,6 @@ const PrivateRoute: React.FC<Props> = ({
    */
   const hasNeededAuthorities =
       authorities.length === 0 || authorities.some(AuthorityService.hasAuthority);
-
   /**
    * If the user doesn't possess the needed authorities Redirect the user to
    * /unauthorized

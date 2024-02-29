@@ -6,14 +6,16 @@ import { Event } from '../../../types/models/Event.model';
 import { User } from '../../../types/models/User.model';
 
 const EventGuestDetail = () => {
-    const { eventId } = useParams<{ eventId: string }>();
+    const { eventId } = useParams<{ eventId?: string }>(); // Notice the eventId is marked as optional
     const [event, setEvent] = useState<Event | null>(null);
 
     useEffect(() => {
         const fetchEventAndGuests = async () => {
             try {
-                const eventData = await EventService.getEventById(eventId);
-                setEvent(eventData);
+                if (eventId) { 
+                    const eventData = await EventService.getEventById(eventId);
+                    setEvent(eventData);
+                }
             } catch (error) {
                 console.error('Error fetching event: ', error);
             }

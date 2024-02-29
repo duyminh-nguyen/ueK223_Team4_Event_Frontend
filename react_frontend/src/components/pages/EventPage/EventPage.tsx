@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import EventService from '../../../Services/EventService';
-import UserService from '../../../Services/UserService';
 import { Event } from '../../../types/models/Event.model';
 import { User } from '../../../types/models/User.model';
 import ActiveUserContext from '../../../Contexts/ActiveUserContext';
@@ -45,28 +44,6 @@ export default function EventPage() {
             console.error('Error fetching events: ', error);
         }
     };
-
-    const loadUsersForEvents = async () => {
-        const eventsWithGuests: Event[] = [];
-    
-        try {
-            for (const event of events) {
-                const guests = await EventService.getEventGuests(event.id, { page: 0, size: 10 }); // Adjust page and size as needed
-                event.guests = guests;
-                eventsWithGuests.push(event);
-            }
-    
-            setEvents(eventsWithGuests);
-        } catch (error) {
-            console.error('Error loading guests for events: ', error);
-        }
-    };
-
-    useEffect(() => {
-        if (context.user) {
-            loadUsersForEvents();
-        }
-    }, [context.user]);
 
     function userCanEditEvent(event: Event, user: User) {
         if (event.owner) {
@@ -117,19 +94,19 @@ export default function EventPage() {
                                         aria-label='show more'>
                                         <GroupIcon />
                                     </IconButton>
-                                    <Typography variant="body2" align="right" sx={{ opacity: 0.6 }}>
+                                    <Typography variant="body2" align="right" sx={{ opacity: 0.6 as number }}>
                                         Owner: {event.owner.firstName} {event.owner.lastName}
                                     </Typography>
                                 </Grid>
-                                <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 }}>
+                                <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 as number }}>
                                     {new Date(event.date).toLocaleDateString()}
                                 </Typography>
                                 <Typography variant="h5" component="div">
                                     {event.name}
                                 </Typography> 
                                 <div style={{ display: 'flex', alignItems: 'center', marginTop: '8px' }}>
-                                    <LocationOnIcon sx={{ opacity: 0.6, marginRight: '4px' }} />
-                                    <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 }}>
+                                    <LocationOnIcon sx={{ opacity: 0.6 as number, marginRight: '4px' }} />
+                                    <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 as number }}>
                                         {event.location}
                                     </Typography>
                                 </div>

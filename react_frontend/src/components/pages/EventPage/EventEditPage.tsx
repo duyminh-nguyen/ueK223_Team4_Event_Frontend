@@ -11,7 +11,7 @@ interface BlogPostProps {
   submitActionHandler: (values: Event) => void;
 }
 
-const EventCreatePage = () => {
+const EventEditPage = () => {
   const navigate = useNavigate();
   const { eventId } = useParams();
   const { user } = useContext(ActiveUserContext);
@@ -26,13 +26,33 @@ const EventCreatePage = () => {
     guests: [],
   });
 
+  useEffect(() => {
+    return () => {
+      if (eventId) {
+        EventService.updateEvent(event)
+          .then((res) => {
+            return setEvents(res);
+          })
+          .catch((error) => {
+            console.log(error + " failed to get event");
+          });
+      }
+    };
+  }, [eventId]);
+
   const submitActionHandler = (values: Event) => {
     let valuesToSubmit = values;
     valuesToSubmit.owner.id = user?.id ?? "";
-      EventService.createEvent(values).then(() => {
-        navigate("/my_events/" + values.id);
-  });
-};
+    if (eventId !== undefined) {
+      EventService.updateEvent(values).then(() => {
+        navigate("/event/" + values.id);
+      });
+    } else {
+      EventService.updateEvent(values).then(() => {
+        navigate("/event/" + valuesToSubmit.owner.id);
+      });
+    }
+  };
 
   return (
     <EventForm
@@ -42,4 +62,4 @@ const EventCreatePage = () => {
   );
 };
 
-export default EventCreatePage;
+export default EventEditPage;

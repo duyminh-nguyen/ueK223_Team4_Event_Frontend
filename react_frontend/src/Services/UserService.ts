@@ -18,7 +18,7 @@ const UserService = {
   },
 
   getAllUsers: () => {
-    return api.get(`/user`);
+    return api.get(`/event/guests/available`);
   },
 
   deleteUser: (id: string) => {

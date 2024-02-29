@@ -38,8 +38,9 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
       description: string().required().min(2).max(200),
     }),
     onSubmit: (values: Event) => {
-      submitActionHandler(values);
-      console.log(values);
+      const val ={...values, guests:guests}
+      submitActionHandler(val);
+      console.log(val);
     },
     enableReinitialize: true,
   });
@@ -66,6 +67,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
 
   const handleUserChange = (event: React.SyntheticEvent, newValue: User[] | null) => {
     if (newValue) {
+      console.log(newValue);
       setGuests(newValue);
     }
   };

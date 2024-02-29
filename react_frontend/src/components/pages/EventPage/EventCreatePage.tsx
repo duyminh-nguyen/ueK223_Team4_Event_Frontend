@@ -30,7 +30,7 @@ const EventCreatePage = () => {
     let valuesToSubmit = values;
     valuesToSubmit.owner.id = user?.id ?? "";
       EventService.createEvent(values).then(() => {
-        navigate("/my_events/" + values.id);
+        navigate("/event/");
   });
 };
 

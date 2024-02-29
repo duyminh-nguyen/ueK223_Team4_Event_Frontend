@@ -29,8 +29,9 @@ const EventEditPage = () => {
   useEffect(() => {
     return () => {
       if (eventId) {
-        EventService.updateEvent(event)
+        EventService.getEventById(eventId)
           .then((res) => {
+            console.log(res);
             return setEvents(res);
           })
           .catch((error) => {
@@ -43,15 +44,9 @@ const EventEditPage = () => {
   const submitActionHandler = (values: Event) => {
     let valuesToSubmit = values;
     valuesToSubmit.owner.id = user?.id ?? "";
-    if (eventId !== undefined) {
       EventService.updateEvent(values).then(() => {
-        navigate("/event/" + values.id);
+        navigate("/event/");
       });
-    } else {
-      EventService.updateEvent(values).then(() => {
-        navigate("/event/" + valuesToSubmit.owner.id);
-      });
-    }
   };
 
   return (

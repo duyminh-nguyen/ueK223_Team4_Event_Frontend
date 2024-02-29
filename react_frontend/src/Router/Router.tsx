@@ -12,6 +12,7 @@ import EventCreatePage from "../components/pages/EventPage/EventCreatePage";
 import authorities from "../config/Authorities";
 import EventPageUser from "../components/pages/EventPage/EventPageUser";
 import EventGuestDetail from "../components/pages/EventPage/EventGuestDetail";
+import EventEditPage from "../components/pages/EventPage/EventEditPage";
 
 
 const Router = () => {
@@ -47,7 +48,7 @@ const Router = () => {
             />
             <Route 
                 path="/event/edit/:eventId" 
-                element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventCreatePage />}></PrivateRoute>} />
+                element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventEditPage />}></PrivateRoute>} />
 
             <Route 
                 path="/event/guests/:eventId" 

@@ -1,4 +1,5 @@
 # README #
+Repository of backend: https://github.com/nussbaumerv/ueK223_Team4_Event_Backend/tree/main
 # uk223 Skeleton
 
 homepage: http://localhost:3000

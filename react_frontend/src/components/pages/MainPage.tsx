@@ -25,9 +25,17 @@ const MainPage = () => {
                     variant='contained'
                     color='primary'
                     onClick={() => {
-                        navigate('/event');
+                        navigate('/events');
                     }}>
-                    Event Page
+                    Events
+                </Button>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => {
+                        navigate('/my-events');
+                    }}>
+                    My Events
                 </Button>
                 <Button
                     variant='contained'
@@ -35,7 +43,7 @@ const MainPage = () => {
                     onClick={() => {
                         navigate('/users');
                     }}>
-                    User Page
+                    User
                 </Button>
                 <Button
                     variant='contained'
@@ -43,7 +51,7 @@ const MainPage = () => {
                     onClick={() => {
                         navigate('/admin');
                     }}>
-                    Admin Page
+                    Admin
                 </Button>
                 <Button
                     variant='contained'

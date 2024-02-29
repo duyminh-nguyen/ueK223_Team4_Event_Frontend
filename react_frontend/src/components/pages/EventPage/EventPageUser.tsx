@@ -113,7 +113,7 @@ export default function EventPage() {
                 Add
             </Button>{' '}
 
-            <h1>All Events</h1>
+            <h1>My Events</h1>
 
             {loading && <p>Loading events...</p>}
             {error && <p>{error}</p>}

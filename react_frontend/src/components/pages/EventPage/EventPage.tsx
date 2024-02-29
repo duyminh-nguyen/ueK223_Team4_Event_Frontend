@@ -152,16 +152,6 @@ export default function EventPage() {
                                             ))}
                                     </ul>
                                 </Collapse>
-                                {context.user && userCanEditEvent(event, context.user) && (
-                                    <Button onClick={() => handleEdit(event.id)} size="small"> {/* Adjusted parameter */}
-                                        Edit Event
-                                    </Button>
-                                )}
-                                {context.user && userCanEditEvent(event, context.user) && (
-                                    <Button onClick={() => deleteEvent(event.id)} size="small">
-                                        Delete Event
-                                    </Button>
-                                )}
                             </Paper>
                         </Grid>
                     ))}

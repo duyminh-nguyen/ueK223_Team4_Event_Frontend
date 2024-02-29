@@ -44,11 +44,11 @@ const EventCreatePage = () => {
     valuesToSubmit.owner.id = user?.id ?? "";
     if (eventId !== undefined) {
       EventService.updateEvent(values).then(() => {
-        navigate("/dashboard/" + values.id);
+        navigate("/events/" + values.id);
       });
     } else {
       EventService.updateEvent(values).then(() => {
-        navigate("/dashboard/" + valuesToSubmit.owner.id);
+        navigate("/events/" + valuesToSubmit.owner.id);
       });
     }
   };

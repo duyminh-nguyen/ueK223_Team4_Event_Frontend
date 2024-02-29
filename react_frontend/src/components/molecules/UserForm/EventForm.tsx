@@ -143,7 +143,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
             variant="contained"
             color="error"
             onClick={() => {
-              navigate("/event");
+              navigate("/events/");
             }}
           >
             Cancel

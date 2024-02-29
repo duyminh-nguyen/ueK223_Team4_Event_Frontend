@@ -1,46 +1,59 @@
-import { error } from "console";
 import api from "../config/Api";
-import { CreateEvent, Event } from "../types/models/Event.model";
+import { Event } from "../types/models/Event.model";
 
 const EventService = {
-    getEvent: async () => {
+    getEvents: async () => {
         try {
             const response = await api.get("/event");
-
             return response.data;
         } catch (error) {
             console.error("Error", error);
-
             return [];
         }
     },
 
-    getById: async (eventID: string): Promise<Event> => {
-        const { data } = await api.get<Event>(`/${eventID}`);
-
-        return data;
-    },
-
-    deleteEventById: async (id: string | number) => {
-        return api.delete(`/event/${id}`);
-    },
-
-    createEvent: async (params: CreateEvent) => {
-        const res = await api.post("/event", params);
-
-        if (res && res.status === 200) {
-
-            console.log("image successfully created");
-
+    getEventById: async (eventId: string): Promise<Event> => {
+        try {
+            const response = await api.get(`/event/${eventId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error", error);
+            throw error; // Propagate the error to the caller
         }
     },
 
-    updateEvent: async (params: Event) => {
-        return api.put(`/event/${params.id}`, params);
+    deleteEventById: async (eventId: string) => {
+        try {
+            await api.delete(`/event/${eventId}`);
+            return true; // Return true if deletion succeeds
+        } catch (error) {
+            console.error("Error", error);
+            throw error; // Propagate the error to the caller
+        }
     },
 
-    getEventParticipantsEndpoint: (eventId: string) => {
-        return `/event${eventId}/participants`;
+    createEvent: async (event: Event): Promise<Event> => {
+        try {
+            const response = await api.post("/event", event);
+            return response.data;
+        } catch (error) {
+            console.error("Error", error);
+            throw error; // Propagate the error to the caller
+        }
+    },
+
+    updateEvent: async (event: Event): Promise<Event> => {
+        try {
+            const response = await api.put(`/event/${event.id}`, event);
+            return response.data;
+        } catch (error) {
+            console.error("Error", error);
+            throw error; // Propagate the error to the caller
+        }
+    },
+
+    getEventGuestsEndpoint: (eventId: string) => {
+        return `/event/${eventId}/guests`;
     },
 };
 

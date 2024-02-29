@@ -1,6 +1,6 @@
 import { User } from "./User.model";
 
-export interface Event {
+export type Event = {
     id: string;
     name: string;
     date: string;
@@ -9,5 +9,3 @@ export interface Event {
     guests: User[];
     owner: User; 
 }
-
-export type CreateEvent = Omit<Event, "id">;

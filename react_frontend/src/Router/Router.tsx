@@ -4,12 +4,13 @@ import PrivateRoute from "./PrivateRoute";
 import HomePage from "../components/pages/HomePage";
 import UserTable from "../components/pages/UserPage/UserTable";
 import UserPage from "../components/pages/UserPage/UserPage";
-import Eventpage from "../components/pages/EventPage/EventPage";
+import EventPage from "../components/pages/EventPage/EventPage";
 import EventForm from "../components/molecules/UserForm/EventForm";
 import AdminPage from "../components/pages/AdminPage/AdminPage";
 import Authorities from "../config/Authorities";
 import MainPage from "../components/pages/MainPage";
 import SingleUserPage from "../components/pages/SingleUserPage";
+import EventCreatePage from "../components/pages/EventPage/EventCreatePage";
 
 const Router = () => {
 
@@ -20,11 +21,11 @@ const Router = () => {
 
             <Route
                 path={"/addevent"}
-                element={<PrivateRoute authorities={[]} element={<EventForm />} />}
+                element={<PrivateRoute authorities={[]} element={<EventCreatePage />} />}
             />
             <Route
-                path={"/adminpage"}
-                element={<PrivateRoute authorities={[{ id: Authorities.ADMIN_READ, name: Authorities.ADMIN_READ }]} element={<AdminPage />} />}
+                path={"/admin"}
+                element={<PrivateRoute authorities={[]} element={<AdminPage />} />}
             />
             <Route
                 path={"/users"}
@@ -51,12 +52,12 @@ const Router = () => {
             <Route
                 path="/event"
                 element={
-                    <PrivateRoute authorities={[]} element={<Eventpage />}></PrivateRoute>
+                    <PrivateRoute authorities={[]} element={<EventPage />}></PrivateRoute>
                 }
             />
             <Route
                 path="/editevent/:eventId" element={
-                <PrivateRoute authorities={[]} element={<EventForm />}></PrivateRoute>} />
+                <PrivateRoute authorities={[]} element={<EventCreatePage />}></PrivateRoute>} />
 
 
             <Route

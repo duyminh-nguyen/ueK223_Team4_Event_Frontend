@@ -1,36 +1,48 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Autocomplete, Box, Button, TextField } from '@mui/material';
-import { useFormik } from 'formik';
-import { date, object, string } from 'yup';
-import EventService from '../../../Services/EventService';
-import { CreateEvent, Event } from '../../../types/models/Event.model';
-import { User } from '../../../types/models/User.model';
-import ActiveUserContext from '../../../Contexts/ActiveUserContext';
-import UserService from '../../../Services/UserService';
+import { useFormik } from "formik";
+import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { object, string } from "yup";
+import { Event } from "../../../types/models/Event.model";
+import { useContext, useEffect, useState } from "react";
+import ActiveUserContext from "../../../Contexts/ActiveUserContext";
+import UserService from "../../../Services/UserService";
+import { User } from "../../../types/models/User.model";
 
+interface EventProps {
+  event : Event;
+  submitActionHandler: (values: Event) => void;
+}
 
+const EventForm = ({ event, submitActionHandler }: EventProps) => {
+  const navigate = useNavigate();
+  const { user } = useContext(ActiveUserContext);
 
-export default function EventForm() {
-    const { eventId } = useParams();
-    const navigate = useNavigate();
-    const { user } = useContext(ActiveUserContext)
+  const formik = useFormik({
+    initialValues: {
+      id: event.id,
+      name: event ? event.name : "",
+      date: event ? event.date : "",
+      location: event ? event.location : "",
+      description: event ? event.description : "",
+      owner: event
+        ? event.owner
+        : { id: "", email: "", firstName: "", lastName: "", roles: [] },
+        guests: event.guests || [],
+      },
+    validationSchema: object({
+      name: string().required().min(2).max(20),
+      date: string().required().matches(/^(\d{2}).(\d{2}).(\d{4})$/, 'Bitte geben Sie ein gültiges Datum im Format TT.MM.YYYY ein.'),
+      location: string().required().min(2).max(20),
+      description: string().required().min(2).max(200),
+    }),
+    onSubmit: (values: Event) => {
+      submitActionHandler(values);
+      console.log(values);
+    },
+    enableReinitialize: true,
+  });
 
-    const [event, setEvent] = useState<Event>({
-        id: '',
-        name: '',
-        date: '',
-        location: '',
-        description: '',
-        guests: [],
-        owner: {
-            id: '', firstName: '', lastName: '',
-            email: '',
-            roles: []
-        }
-    });
-
-    const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     UserService.getAllUsers().then((data: any) => {
@@ -38,124 +50,74 @@ export default function EventForm() {
     });
   }, []);
 
+  const handleUserChange = (event: React.SyntheticEvent, newValue: User[] | null) => {
+    formik.setFieldValue('guests', newValue || []);
+  };
 
-    const formik = useFormik({
-        initialValues: {
-            name: event.name,
-            date: event.date,
-            location: event.location,
-            description: event.description,
-            guests: event.guests,
-            owner: event.owner
-        },
-        validationSchema: object({
-            name: string().required().min(2).max(50),
-            date: string().required().matches(/^(\d{2})-(\d{2})-(\d{4})$/, 'Bitte geben Sie ein gültiges Datum im Format TT.MM.YYYY ein.'),
-            location: string().required(),
-            description: string().required().min(10).max(200) // Adding validation for description
-        }),
-        onSubmit: (values: CreateEvent) => {
-            handleSubmit(values);
-        },
-    });
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        formik.setFieldValue(name, value);
-    };
-
-    const handleSubmit = async (values: CreateEvent) => {
-        try {
-            if (eventId) {
-                await EventService.updateEvent({ ...values, id: eventId });
-                console.log('Event erfolgreich aktualisiert');
-            } else {
-                await EventService.createEvent(values);
-                console.log('Event erfolgreich hinzugefügt');
-                console.log(values)
-            }
-            navigate('/event');
-        } catch (error) {
-            console.error('Fehler beim Speichern des Events: ', error);
-        }
-    };
-
-    return (
-        <div>
-            <h1>{eventId ? 'Edit Event' : 'Create Event'}</h1>
-            <form onSubmit={formik.handleSubmit}>
-                <Box>
-                    <TextField
-                        name="name"
-                        label="Event Name"
-                        variant="outlined"
-                        onBlur={formik.handleBlur}
-                        onChange={handleInputChange}
-                        error={Boolean(formik.touched.name && formik.errors.name)}
-                        value={formik.values.name}
-                    />
-                    {formik.errors.name && formik.touched.name ? (
-                        <div style={{ color: 'red' }}>{formik.errors.name}</div>
-                    ) : null}
-                    <TextField
-                        name="date"
-                        label="Date"
-                        variant="outlined"
-                        onBlur={formik.handleBlur}
-                        onChange={handleInputChange}
-                        error={Boolean(formik.touched.date && formik.errors.date)}
-                        value={formik.values.date}
-                    />
-                    {formik.errors.date && formik.touched.date ? (
-                        <div style={{ color: 'red' }}>{formik.errors.date}</div>
-                    ) : null}
-                    <TextField
-                        name="location"
-                        label="Location"
-                        variant="outlined"
-                        onBlur={formik.handleBlur}
-                        onChange={handleInputChange}
-                        error={Boolean(formik.touched.location && formik.errors.location)}
-                        value={formik.values.location}
-                    />
-                    {formik.errors.location && formik.touched.location ? (
-                        <div style={{ color: 'red' }}>{formik.errors.location}</div>
-                    ) : null}
-                    <TextField
-                        name="description"
-                        label="Description"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        onBlur={formik.handleBlur}
-                        onChange={handleInputChange}
-                        error={Boolean(formik.touched.description && formik.errors.description)}
-                        value={formik.values.description}
-                    />
-                    {formik.errors.description && formik.touched.description ? (
-                        <div style={{ color: 'red' }}>{formik.errors.description}</div>
-                    ) : null}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        disabled={!formik.isValid}
-                    >
-                        {eventId ? 'Update' : 'Create'}
-                    </Button>
-                    <Button 
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        href="/event"
-                    >
-                        {eventId ? 'cancel' : 'cancel'}
-                    </Button>
-                    <Autocomplete
+  return (
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <h1>Create Event</h1>
+        <Box sx={{ paddingTop: "15px" }}>
+          <TextField
+            id="name"
+            label="Name"
+            variant="outlined"
+            sx={{ paddingRight: "10px" }}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            error={Boolean(formik.touched.name && formik.errors.name)}
+            value={formik.values.name}
+          />
+          {formik.errors.name && formik.touched.name ? (
+            <div style={{ color: "red" }}>{formik.errors.name}</div>
+          ) : null}
+          <TextField
+            id="date"
+            label="Date"
+            variant="outlined"
+            sx={{ paddingRight: "10px" }}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            error={Boolean(formik.touched.date && formik.errors.date)}
+            value={formik.values.date}
+          />
+          {formik.errors.date && formik.touched.date ? (
+            <div style={{ color: "red" }}>{formik.errors.date}</div>
+          ) : null}
+          <TextField
+            id="location"
+            label="Location"
+            variant="outlined"
+            sx={{ paddingRight: "10px" }}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            error={Boolean(formik.touched.location && formik.errors.location)}
+            value={formik.values.location}
+          />
+          {formik.errors.location && formik.touched.location ? (
+            <div style={{ color: "red" }}>{formik.errors.location}</div>
+          ) : null}
+          <TextField
+            id="description"
+            label="Description"
+            variant="outlined"
+            sx={{ paddingRight: "10px" }}
+            onBlur={formik.handleBlur}
+            onChange={formik.handleChange}
+            error={Boolean(formik.touched.description && formik.errors.description)}
+            value={formik.values.description}
+          />
+          {formik.errors.description && formik.touched.description ? (
+            <div style={{ color: "red" }}>{formik.errors.description}</div>
+          ) : null}
+          <Autocomplete
             multiple
             id="tags-standard"
             options={users}
             getOptionLabel={(option) => option.email}
+            onChange={handleUserChange}
+            value={formik.values.guests}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -164,8 +126,32 @@ export default function EventForm() {
               />
             )}
           />
-                </Box>
-            </form>
+        </Box>
+        <div>
+          <Button
+            sx={{ marginTop: "15px", marginRight: "10px" }}
+            variant="contained"
+            color="success"
+            type="submit"
+            disabled={!(formik.dirty && formik.isValid)}
+          >
+            {event.id && "Save"}
+            {!event.id && "Create"}
+          </Button>
+          <Button
+            sx={{ marginTop: "15px" }}
+            variant="contained"
+            color="error"
+            onClick={() => {
+              navigate("/event");
+            }}
+          >
+            Cancel
+          </Button>
         </div>
-    );
-}
+      </form>
+    </>
+  );
+};
+
+export default EventForm;

@@ -32,7 +32,7 @@ export default function EventPage() {
 
     const loadEvents = async () => {
         try {
-            const data = await EventService.getEvent();
+            const data = await EventService.getEvents(); // Changed to getEvents
             setEvents(data);
         } catch (error) {
             console.error('Error fetching events: ', error);
@@ -71,9 +71,9 @@ export default function EventPage() {
         return false;
     }
 
-    const deleteEvent = async (id: string | number) => {
+    const deleteEvent = async (id: string) => { // Changed parameter type to string
         try {
-            await EventService.deleteEventById(id);
+            await EventService.deleteEventById(id); // Changed to deleteEventById
             loadEvents();
             console.log('Event successfully deleted');
         } catch (error) {
@@ -82,7 +82,7 @@ export default function EventPage() {
     };
 
     const handleEdit = (id: string) => {
-        navigate('/editevent' + id);
+        navigate('/editevent/' + id); // Adjusted URL formatting
     };
 
     const [expanded, setExpanded] = useState<string | false>(false);
@@ -101,8 +101,6 @@ export default function EventPage() {
                 }}>
                 Home
             </Button>
-
-            <h1>My Events</h1>
             <Button size="small" color="success" variant="contained" onClick={handleAdd}>
                 Add
             </Button>{' '}
@@ -155,7 +153,7 @@ export default function EventPage() {
                                     </ul>
                                 </Collapse>
                                 {context.user && userCanEditEvent(event, context.user) && (
-                                    <Button onClick={() => navigate(`/editevent/${event.id}`)} size="small">
+                                    <Button onClick={() => handleEdit(event.id)} size="small"> {/* Adjusted parameter */}
                                         Edit Event
                                     </Button>
                                 )}

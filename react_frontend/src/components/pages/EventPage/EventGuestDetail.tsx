@@ -6,7 +6,7 @@ import { Event } from '../../../types/models/Event.model';
 import { User } from '../../../types/models/User.model';
 
 const EventGuestDetail = () => {
-    const { eventId } = useParams<{ eventId?: string }>(); // Notice the eventId is marked as optional
+    const { eventId } = useParams<{ eventId?: string }>();
     const [event, setEvent] = useState<Event | null>(null);
 
     useEffect(() => {

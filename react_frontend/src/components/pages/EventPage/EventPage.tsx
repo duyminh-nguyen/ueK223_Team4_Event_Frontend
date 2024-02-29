@@ -6,14 +6,14 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import EventService from '../../../Services/EventService';
 import UserService from '../../../Services/UserService';
-import { Event } from '../../../types/models/Event.model'; // Update import
+import { Event } from '../../../types/models/Event.model';
 import { User } from '../../../types/models/User.model';
 import ActiveUserContext from '../../../Contexts/ActiveUserContext';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import GroupIcon from '@mui/icons-material/Group'; // Import group icon
+import GroupIcon from '@mui/icons-material/Group';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default function EventPage() {
@@ -21,7 +21,11 @@ export default function EventPage() {
     const context = useContext(ActiveUserContext);
 
     const handleAdd = () => {
-        navigate('../addevent/');
+        navigate('/event/add');
+    };
+
+    const handleEdit = (id: string) => {
+        navigate('/event/edit/' + id);
     };
 
     const [events, setEvents] = useState<Event[]>([]);
@@ -32,7 +36,7 @@ export default function EventPage() {
 
     const loadEvents = async () => {
         try {
-            const data = await EventService.getEvents(); // Changed to getEvents
+            const data = await EventService.getEvents();
             setEvents(data);
         } catch (error) {
             console.error('Error fetching events: ', error);
@@ -71,18 +75,14 @@ export default function EventPage() {
         return false;
     }
 
-    const deleteEvent = async (id: string) => { // Changed parameter type to string
+    const deleteEvent = async (id: string) => {
         try {
-            await EventService.deleteEventById(id); // Changed to deleteEventById
+            await EventService.deleteEventById(id);
             loadEvents();
             console.log('Event successfully deleted');
         } catch (error) {
             console.error('Error deleting event: ', error);
         }
-    };
-
-    const handleEdit = (id: string) => {
-        navigate('/editevent/' + id); // Adjusted URL formatting
     };
 
     const [expanded, setExpanded] = useState<string | false>(false);
@@ -104,10 +104,7 @@ export default function EventPage() {
             <Button size="small" color="success" variant="contained" onClick={handleAdd}>
                 Add
             </Button>{' '}
-
             <h1>All Events</h1>
-
-            
             <Box>
                 <Grid container spacing={3}>
                     {events.map((event, index) => (

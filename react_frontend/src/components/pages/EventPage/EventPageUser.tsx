@@ -19,7 +19,11 @@ export default function EventPage() {
     const context = useContext(ActiveUserContext);
 
     const handleAdd = () => {
-        navigate('../addevent/');
+        navigate('/event/add');
+    };
+
+    const handleEdit = (id: string) => {
+        navigate('/event/edit/' + id);
     };
 
     const [events, setEvents] = useState<Event[]>([]);
@@ -30,8 +34,6 @@ export default function EventPage() {
         setLoading(true);
         loadEvents();
     }, [userId]);
-
-    
 
     const loadEvents = async () => {
         try {
@@ -45,7 +47,6 @@ export default function EventPage() {
             setLoading(false);
         }
     };
-    
 
     const userCanEditEvent = (event: Event) => {
         return event.owner_id === userId; // Check if owner_id matches userId
@@ -60,10 +61,6 @@ export default function EventPage() {
             setError('Error deleting event. Please try again later.');
             console.error('Error deleting event: ', error);
         }
-    };
-
-    const handleEdit = (id: string) => {
-        navigate('/editevent/' + id);
     };
 
     const [expanded, setExpanded] = useState<string | false>(false);

@@ -41,7 +41,7 @@ const Router = () => {
                 }
             />
             <Route
-                path={"/addevent"}
+                path={"/event/add"}
                 element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventCreatePage />} />}
             />
             <Route 

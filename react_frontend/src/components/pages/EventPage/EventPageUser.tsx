@@ -26,6 +26,10 @@ export default function EventPage() {
         navigate('/event/edit/' + id);
     };
 
+    const handleDetail = (id: string) => {
+        navigate('/event/guests/' + id);
+    };
+
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

@@ -15,7 +15,7 @@ const EventCreatePage = () => {
   const navigate = useNavigate();
   const { eventId } = useParams();
   const { user } = useContext(ActiveUserContext);
-  const [event, setBlogPost] = useState<Event>({
+  const [event, setEvents] = useState<Event>({
     id: "",
     name: "",
     date: "",
@@ -31,7 +31,7 @@ const EventCreatePage = () => {
       if (eventId) {
         EventService.createEvent(event)
           .then((res) => {
-            return setBlogPost(res);
+            return setEvents(res);
           })
           .catch((error) => {
             console.log(error + " failed to get event");

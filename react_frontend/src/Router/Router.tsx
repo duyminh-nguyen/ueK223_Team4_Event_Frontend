@@ -11,6 +11,7 @@ import SingleUserPage from "../components/pages/SingleUserPage";
 import EventCreatePage from "../components/pages/EventPage/EventCreatePage";
 import authorities from "../config/Authorities";
 import EventPageUser from "../components/pages/EventPage/EventPageUser";
+import EventGuestDetail from "../components/pages/EventPage/EventGuestDetail";
 
 
 const Router = () => {
@@ -47,6 +48,10 @@ const Router = () => {
             <Route 
                 path="/event/edit/:eventId" 
                 element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventCreatePage />}></PrivateRoute>} />
+
+            <Route 
+                path="/event/guests/:eventId" 
+                element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventGuestDetail />}></PrivateRoute>} />
 
             <Route
                 path={"/users"}

@@ -5,11 +5,12 @@ import { object, string } from "yup";
 import { Event } from "../../../types/models/Event.model";
 import { useContext, useEffect, useState } from "react";
 import ActiveUserContext from "../../../Contexts/ActiveUserContext";
+import EventService from "../../../Services/EventService";
 import UserService from "../../../Services/UserService";
 import { User } from "../../../types/models/User.model";
 
 interface EventProps {
-  event : Event;
+  event: Event;
   submitActionHandler: (values: Event) => void;
 }
 
@@ -28,7 +29,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
         ? event.owner
         : { id: "", email: "", firstName: "", lastName: "", roles: [] },
       guests: event.guests || [],
-      owner_id: undefined
+      owner_id: undefined,
     },
     validationSchema: object({
       name: string().required().min(2).max(20),
@@ -44,12 +45,23 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
   });
 
   const [users, setUsers] = useState<User[]>([]);
+  const [eventGuests, setEventGuests] = useState<User[]>([]);
 
   useEffect(() => {
     UserService.getAllUsers().then((data: any) => {
       setUsers(data.data);
     });
   }, []);
+
+  useEffect(() => {
+    if (event.id) {
+      EventService.getEventGuests(event.id, { page: 0, size: 10 }).then((guests) => {
+        setEventGuests(guests);
+      }).catch((error) => {
+        console.error('Error fetching event guests:', error);
+      });
+    }
+  }, [event.id]);
 
   const handleUserChange = (event: React.SyntheticEvent, newValue: User[] | null) => {
     formik.setFieldValue('guests', newValue || []);
@@ -112,7 +124,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
           {formik.errors.description && formik.touched.description ? (
             <div style={{ color: "red" }}>{formik.errors.description}</div>
           ) : null}
-          <Autocomplete
+           <Autocomplete
             multiple
             id="tags-standard"
             options={users}
@@ -136,8 +148,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
             type="submit"
             disabled={!(formik.dirty && formik.isValid)}
           >
-            {event.id && "Save"}
-            {!event.id && "Create"}
+            {event.id ? "Save" : "Create"}
           </Button>
           <Button
             sx={{ marginTop: "15px" }}

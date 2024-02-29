@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
     const navigate = useNavigate();
-
+    const userJSON = localStorage.getItem("user");
+    const user = userJSON ? JSON.parse(userJSON) : null;
+  
     return (
         <Box
             display="flex"
@@ -25,7 +27,7 @@ const MainPage = () => {
                     variant='contained'
                     color='primary'
                     onClick={() => {
-                        navigate('/events');
+                        navigate('/event');
                     }}>
                     Events
                 </Button>
@@ -33,7 +35,7 @@ const MainPage = () => {
                     variant='contained'
                     color='primary'
                     onClick={() => {
-                        navigate('/my-events');
+                        navigate('/my-events/' + user.id);
                     }}>
                     My Events
                 </Button>

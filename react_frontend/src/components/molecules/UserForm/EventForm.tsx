@@ -27,8 +27,9 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
       owner: event
         ? event.owner
         : { id: "", email: "", firstName: "", lastName: "", roles: [] },
-        guests: event.guests || [],
-      },
+      guests: event.guests || [],
+      owner_id: undefined
+    },
     validationSchema: object({
       name: string().required().min(2).max(20),
       date: string().required().matches(/^(\d{2}).(\d{2}).(\d{4})$/, 'Bitte geben Sie ein gültiges Datum im Format TT.MM.YYYY ein.'),
@@ -143,7 +144,7 @@ const EventForm = ({ event, submitActionHandler }: EventProps) => {
             variant="contained"
             color="error"
             onClick={() => {
-              navigate("/events/");
+              navigate("/event/");
             }}
           >
             Cancel

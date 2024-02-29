@@ -118,7 +118,7 @@ export default function EventPage() {
                                         aria-expanded={expanded === event.id}
                                         onClick={() => handleExpandClick(event.id)}
                                         aria-label='show more'>
-                                        <GroupIcon /> {/* Group icon */}
+                                        <GroupIcon />
                                     </IconButton>
                                     <Typography variant="body2" align="right" sx={{ opacity: 0.6 }}>
                                         Owner: {event.owner.firstName} {event.owner.lastName}

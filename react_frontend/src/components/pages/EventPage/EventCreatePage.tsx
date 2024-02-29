@@ -21,6 +21,7 @@ const EventCreatePage = () => {
     date: "",
     location: "",
     description: "",
+    owner_id: "",
     owner: { id: "", firstName: "", lastName: "", email: "", roles: [] },
     guests: [],
   });
@@ -44,11 +45,11 @@ const EventCreatePage = () => {
     valuesToSubmit.owner.id = user?.id ?? "";
     if (eventId !== undefined) {
       EventService.updateEvent(values).then(() => {
-        navigate("/events/" + values.id);
+        navigate("/event/" + values.id);
       });
     } else {
       EventService.updateEvent(values).then(() => {
-        navigate("/events/" + valuesToSubmit.owner.id);
+        navigate("/event/" + valuesToSubmit.owner.id);
       });
     }
   };

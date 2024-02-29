@@ -29,24 +29,24 @@ const Router = () => {
                 }
             />
             <Route
-                path="/events"
+                path="/event"
                 element={
-                    <PrivateRoute authorities={[{id: authorities.USER_MODIFY, name: authorities.USER_MODIFY}]} element={<EventPage />}></PrivateRoute>
+                    <PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventPage />}></PrivateRoute>
                 }
             />
             <Route
-                path="/my-events"
+                path="/my-events/:ownerId"
                 element={
-                    <PrivateRoute authorities={[{id: authorities.USER_MODIFY, name: authorities.USER_MODIFY}]} element={<EventPageUser />}></PrivateRoute>
+                    <PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventPageUser />}></PrivateRoute>
                 }
             />
             <Route
                 path={"/addevent"}
-                element={<PrivateRoute authorities={[{id: authorities.USER_MODIFY, name: authorities.USER_MODIFY}]} element={<EventCreatePage />} />}
+                element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventCreatePage />} />}
             />
-            <Route
-                path="/editevent/:eventId" element={
-                <PrivateRoute authorities={[{id: authorities.USER_MODIFY, name: authorities.USER_MODIFY}]} element={<EventCreatePage />}></PrivateRoute>} />
+            <Route 
+                path="/event/edit/:eventId" 
+                element={<PrivateRoute authorities={[{id: authorities.DEFAULT, name: authorities.DEFAULT}]} element={<EventCreatePage />}></PrivateRoute>} />
 
             <Route
                 path={"/users"}

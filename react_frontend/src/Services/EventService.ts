@@ -66,7 +66,6 @@ const EventService = {
     getEventGuestsEndpoint: (eventId: string) => {
         return `/event/${eventId}/guests`;
     },
-
     getEventGuests: async (eventId: string, pageable: any): Promise<User[]> => {
         try {
             const response = await api.get(`/event/${eventId}/guests`, {

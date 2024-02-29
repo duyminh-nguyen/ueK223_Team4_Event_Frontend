@@ -21,7 +21,7 @@ const AuthorityService = {
   hasAuthorities: (authorities: Authority[]) => {
     AuthorityService.initAuthoritySet();
     for (const element of authorities) {
-      if (!authoritySet.has(element.name)) { // To get the name of the authority
+      if (!authoritySet.has(element.name)) {
         return false;
       }
     }

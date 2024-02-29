@@ -1,21 +1,20 @@
-import React, { useContext } from "react";
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Event } from "../../../types/models/Event.model";
 import EventForm from "../../molecules/UserForm/EventForm";
-import { useNavigate, useParams } from "react-router-dom";
 import ActiveUserContext from "../../../Contexts/ActiveUserContext";
 import EventService from "../../../Services/EventService";
 
-interface BlogPostProps {
-  event: Event;
-  submitActionHandler: (values: Event) => void;
-}
-
+// Component for editing an event
 const EventEditPage = () => {
+  // Hook for navigation
   const navigate = useNavigate();
+  // Accessing event ID from URL parameters
   const { eventId } = useParams();
+  // Accessing active user context
   const { user } = useContext(ActiveUserContext);
-  const [event, setEvents] = useState<Event>({
+  // State variable for managing event data
+  const [event, setEvent] = useState<Event>({
     id: "",
     name: "",
     date: "",
@@ -26,27 +25,29 @@ const EventEditPage = () => {
     guests: [],
   });
 
+  // Fetch event data when component mounts
   useEffect(() => {
-    return () => {
-      if (eventId) {
-        EventService.getEventById(eventId)
-          .then((res) => {
-            console.log(res);
-            return setEvents(res);
-          })
-          .catch((error) => {
-            console.log(error + " failed to get event");
-          });
-      }
-    };
+    if (eventId) {
+      // Fetch event details and update state
+      EventService.getEventById(eventId)
+        .then((res) => {
+          console.log(res);
+          return setEvent(res);
+        })
+        .catch((error) => {
+          console.log(error + " failed to get event");
+        });
+    }
   }, [eventId]);
 
+  // Function to handle form submission
   const submitActionHandler = (values: Event) => {
     let valuesToSubmit = values;
     valuesToSubmit.owner.id = user?.id ?? "";
-      EventService.updateEvent(values).then(() => {
-        navigate("/event/");
-      });
+    // Update event details on the server
+    EventService.updateEvent(valuesToSubmit).then(() => {
+      navigate("/event/");
+    });
   };
 
   return (

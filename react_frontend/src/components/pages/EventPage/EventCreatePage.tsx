@@ -11,10 +11,15 @@ interface BlogPostProps {
   submitActionHandler: (values: Event) => void;
 }
 
+// Component for creating a new event
 const EventCreatePage = () => {
+  // Hook for navigation
   const navigate = useNavigate();
+  // Accessing parameters from the URL
   const { eventId } = useParams();
+  // Accessing active user context
   const { user } = useContext(ActiveUserContext);
+  // State variable for managing event data
   const [event, setEvents] = useState<Event>({
     id: "",
     name: "",
@@ -26,15 +31,20 @@ const EventCreatePage = () => {
     guests: [],
   });
 
+  // Handler function for form submission
   const submitActionHandler = (values: Event) => {
+    // Adding owner ID to the event
     let valuesToSubmit = values;
     valuesToSubmit.owner.id = user?.id ?? "";
-      EventService.createEvent(values).then(() => {
-        navigate("/event/");
-  });
-};
+    // Calling EventService to create the event
+    EventService.createEvent(values).then(() => {
+      // Navigating to the event list page after event creation
+      navigate("/event/");
+    });
+  };
 
   return (
+    // Rendering the EventForm component with event data and submission handler
     <EventForm
       event={event}
       submitActionHandler={submitActionHandler}

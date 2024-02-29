@@ -28,7 +28,7 @@ const EventCreatePage = () => {
   useEffect(() => {
     return () => {
       if (eventId) {
-        EventService.createEvent(eventId)
+        EventService.createEvent(event)
           .then((res) => {
             return setBlogPost(res);
           })

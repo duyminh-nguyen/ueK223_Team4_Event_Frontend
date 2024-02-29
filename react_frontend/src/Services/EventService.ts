@@ -18,17 +18,17 @@ const EventService = {
             return response.data;
         } catch (error) {
             console.error("Error", error);
-            throw error; // Propagate the error to the caller
+            throw error;
         }
     },
 
     deleteEventById: async (eventId: string) => {
         try {
             await api.delete(`/event/${eventId}`);
-            return true; // Return true if deletion succeeds
+            return true;
         } catch (error) {
             console.error("Error", error);
-            throw error; // Propagate the error to the caller
+            throw error;
         }
     },
 
@@ -38,7 +38,7 @@ const EventService = {
             return response.data;
         } catch (error) {
             console.error("Error", error);
-            throw error; // Propagate the error to the caller
+            throw error;
         }
     },
 
@@ -48,7 +48,7 @@ const EventService = {
             return response.data;
         } catch (error) {
             console.error("Error", error);
-            throw error; // Propagate the error to the caller
+            throw error;
         }
     },
 

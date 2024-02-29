@@ -33,9 +33,7 @@ const EventGuestDetail = () => {
                 if (eventId) { 
                     const response = await EventService.getEventGuests(eventId, { page: page - 1, size: 10 });
                     setGuests(response);
-                    // Assuming response is an array
-                    // You might need to adjust the logic if response contains other properties
-                    setTotalPages(1); // Since we don't have totalPages in response, set it to a default value
+                    setTotalPages(1);
                 }
             } catch (error) {
                 console.error('Error fetching guests: ', error);
